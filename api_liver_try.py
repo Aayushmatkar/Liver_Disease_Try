@@ -26,16 +26,16 @@ app.add_middleware(
 )
 
 class LiverData(BaseModel):
-    age: float
-    gender: float
+    #age: float
+    #gender: float
     total_bilirubin: float
     direct_bilirubin: float
     alkaline_phosphotase: float
     alamine_aminotransferase: float
-    aspartate_aminotransferase: float
-    total_protiens: float
-    albumin: float
-    albumin_and_globulin_ratio: float
+    #aspartate_aminotransferase: float
+    #total_protiens: float
+    #albumin: float
+    #albumin_and_globulin_ratio: float
 
 @app.get("/")
 def foobar():
@@ -50,10 +50,9 @@ def predict_liver_disease(data: LiverData):
     '''
     try:
         # Create a NumPy array from the input data
-        input_data = np.array([[data.age, data.gender, data.total_bilirubin, data.direct_bilirubin,
+        input_data = np.array([[ data.total_bilirubin, data.direct_bilirubin,
                                 data.alkaline_phosphotase, data.alamine_aminotransferase,
-                                data.aspartate_aminotransferase, data.total_protiens, data.albumin,
-                                data.albumin_and_globulin_ratio]])
+                               ]])
 
         # Standardize the input data using the previously fitted scaler
         input_data = scaler.transform(input_data)
