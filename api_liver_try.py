@@ -9,7 +9,7 @@ app = FastAPI()
 
 # Load the pre-trained model and scaler
 model = pickle.load(open('liver_disease_model.pkl', 'rb'))
-scaler = pickle.load(open('scaler.pkl', 'rb'))
+scaler = pickle.load(open('liver_disease_scaler.pkl', 'rb'))
 
 # Setup CORS
 origins = [
