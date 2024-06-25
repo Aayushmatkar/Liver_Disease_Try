@@ -56,7 +56,4 @@ def predict_liver_disease(data: LiverData):
         # Return an error message if an exception occurs
         return {"error_message": f"An error occurred: {str(e)}"}
 
-if __name__ == "__main__":
-    import uvicorn
-    port = int(os.environ.get("PORT", 8000))
-    uvicorn.run(app, host="0.0.0.0", port=port)
+
