@@ -23,7 +23,6 @@ class LiverData(BaseModel):
     total_bilirubin: float
     direct_bilirubin: float
     alkaline_phosphotase: float
-    alamine_aminotransferase: float
     albumin: float  # Added albumin field
 
 @app.get("/")
