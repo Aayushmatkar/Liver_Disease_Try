@@ -11,6 +11,7 @@ app = FastAPI()
 model = pickle.load(open('liver_disease_model.pkl', 'rb'))
 scaler = pickle.load(open('liver_disease_scaler.pkl', 'rb'))
 
+
 # Setup CORS
 origins = [
     "http://localhost:3000",  # Update this with the actual origin of your frontend
@@ -26,56 +27,62 @@ app.add_middleware(
 )
 
 class LiverData(BaseModel):
-    #age: float
-    #gender: float
-    total_bilirubin: float
-    direct_bilirubin: float
-    alkaline_phosphotase: float
-    alamine_aminotransferase: float
-    #aspartate_aminotransferase: float
-    #total_protiens: float
-    #albumin: float
-    #albumin_and_globulin_ratio: float
+    total_bilirubin: float = Field(..., gt=0, description="Total bilirubin level")
+    direct_bilirubin: float = Field(..., gt=0, description="Direct bilirubin level")
+    alkaline_phosphotase: float = Field(..., gt=0, description="Alkaline phosphatase level")
+    albumin: float = Field(..., gt=0, description="Albumin level")  # Added albumin field
 
 @app.get("/")
-def foobar():
+def read_root():
     return {
-        "Server is up and Running"
+        "message": "Server is up and Running"
     }
+
+# Load the pre-trained model
+with open("liver_disease_model.pkl", "rb") as model_file:
+    model = pickle.load(liver_disease_model.pkl)
 
 @app.post("/predict")
 def predict_liver_disease(data: LiverData):
-    '''
-    Endpoint for predicting liver disease using the trained model.
-    '''
+    """
+    Endpoint for predicting liver conditions based on bilirubin levels and albumin using an ML model.
+    """
     try:
-        # Create a NumPy array from the input data
-        input_data = np.array([[ data.total_bilirubin, data.direct_bilirubin,
-                                data.alkaline_phosphotase, data.alamine_aminotransferase,
-                               ]])
+        # Prepare the data for prediction
+        input_data = [
+            data.total_bilirubin,
+            data.direct_bilirubin,
+            data.alkaline_phosphotase,
+            data.albumin
+        ]
 
-        # Standardize the input data using the previously fitted scaler
-        input_data = scaler.transform(input_data)
+        # Make a prediction using the ML model
+        prediction = model.predict([input_data])
+        
+        # Interpret the prediction result
+        liver_cholestasis = prediction[0] == 0
+        liver_cirrhosis = prediction[0] == 1
+        gilberts_syndrome = prediction[0] == 2
 
-        # Make prediction using the pre-trained model
-        prediction = model.predict_proba(input_data)
-
-        # Check if prediction is not None
-        if prediction is not None and prediction[0] is not None:
-            # Determine result based on a threshold (e.g., 0.5)
-            result = True if prediction[0][1] > 0.5 else False
-
-            # Return the prediction result as a boolean and the predicted probability
-            return {
-            
+        # Prepare the response
+        response = {
             "GilbertsSyndrome": gilberts_syndrome,
             "LiverCholestasis": liver_cholestasis,
             "LiverCirrhosis": liver_cirrhosis,
-            }
+        }
+
+        if gilberts_syndrome:
+            response["message"] = "High total and direct bilirubin levels indicate Gilbert's syndrome."
+        elif liver_cholestasis:
+            response["message"] = "High bilirubin levels indicate liver cholestasis."
+        elif liver_cirrhosis:
+            response["message"] = "Low albumin levels indicate liver cirrhosis."
         else:
-            # Handle the case where prediction is None
-            return {"LiverDisease": None, "error_message": "Unable to make a prediction for the given input."}
+            response["message"] = "Bilirubin and albumin levels do not indicate any specific liver condition."
+
+        return response
 
     except Exception as e:
         # Return an error message if an exception occurs
-        return {"error_message": f"An error occurred: {str(e)}"}
+        raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
+
