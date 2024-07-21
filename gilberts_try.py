@@ -7,7 +7,8 @@ app = FastAPI()
 
 # Setup CORS
 origins = [
-    "http://localhost:3000",  # Update this with the actual origin of your frontend
+    "http://localhost:3001",
+    "http://localhost:3000",# Update this with the actual origin of your frontend
     "https://www.e-hospital.ca",  # Add additional origins if needed
     "https://liver-disease-2024-28cca553d8f4.herokuapp.com/predict",
 ]
