@@ -15,7 +15,7 @@ scaler = pickle.load(open('liver_disease_scaler.pkl', 'rb'))
 # Setup CORS
 origins = [
     "http://localhost:3000",  # Update this with the actual origin of your frontend
-    "https://yourfrontendapp.com",  # Add additional origins if needed
+    "https://www.e-hospital.ca",  # Add additional origins if needed
 ]
 
 app.add_middleware(
