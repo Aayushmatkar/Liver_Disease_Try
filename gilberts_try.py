@@ -37,6 +37,12 @@ def predict_liver_disease(data: LiverData):
     Endpoint for checking liver conditions based on bilirubin levels and albumin.
     '''
     try:
+        input_data = [
+            data.total_bilirubin,
+            data.direct_bilirubin,
+            data.alkaline_phosphotase,
+            data.albumin
+        ]
         # Conditions for liver cholestasis
         liver_cholestasis = data.total_bilirubin > 2.0 and data.direct_bilirubin > 0.4
         
