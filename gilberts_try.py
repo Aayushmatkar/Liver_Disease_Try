@@ -9,6 +9,7 @@ app = FastAPI()
 origins = [
     "http://localhost:3000",  # Update this with the actual origin of your frontend
     "https://www.e-hospital.ca",  # Add additional origins if needed
+    "https://liver-disease-2024-28cca553d8f4.herokuapp.com/predict",
 ]
 
 app.add_middleware(
