@@ -8,7 +8,7 @@ app = FastAPI()
 # Setup CORS
 origins = [
     "http://localhost:3000",  # Update this with the actual origin of your frontend
-    "https://yourfrontendapp.com",  # Add additional origins if needed
+    "https://www.e-hospital.ca",  # Add additional origins if needed
 ]
 
 app.add_middleware(
