@@ -67,7 +67,10 @@ def predict_liver_disease(data: LiverData):
 
             # Return the prediction result as a boolean and the predicted probability
             return {
-                "LiverDisease": result,
+            
+            "GilbertsSyndrome": gilberts_syndrome,
+            "LiverCholestasis": liver_cholestasis,
+            "LiverCirrhosis": liver_cirrhosis,
             }
         else:
             # Handle the case where prediction is None
